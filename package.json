@@ -31,7 +31,8 @@
   },
   "devDependencies": {
     "debug": "latest",
-    "tslint": "latest"
+    "tslint": "latest",
+    "base64-stream": "latest"
   },
   "scripts": {
     "lint": "tslint bin/*.ts lib/*.ts",

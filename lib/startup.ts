@@ -14,9 +14,17 @@ class $TS {
     static put(mimeType: string, obj: string) {
         let result = {};
         result[mimeType] = obj;
-        global.$$.done({
-            mime: result
-        });
+        global.$$.mime(result);
+        global.$$.done();
+    }
+
+    static screen(url: string) {
+        global.$$.async();
+        const encode = require('base64-stream').encode();
+        const spawn = require('child_process').spawn;
+        const wk = spawn('xvfb-run', ['-a', '-s', '-screen 0 640x480x16', 'wkhtmltoimage', '-f', 'jpeg', '-q', url, '-']);
+        var out = '';
+        wk.stdout.pipe(encode).on('data', d => out += d.toString()).on('finish', () => $TS.png(out));
     }
 
     static html(html: string) {
