@@ -27,6 +27,34 @@ class $TS {
         wk.stdout.pipe(encode).on('data', d => out += d.toString()).on('finish', () => $TS.png(out));
     }
 
+    static boot() {
+        global.$$.async();
+        var webpack = require('webpack');
+        var config = require('../webpack.config.js');
+        var tag = Math.random().toString(36).substring(7);
+        var fs = require('fs');
+        var moduleFile = '../src/app.component.ts';
+
+        fs.readFile(moduleFile, 'utf8', function (err,data) {
+            if (err) {
+                return console.log(err);
+            }
+            var result = data.replace(/'bc-app(-.*)?'/ig, '\'bc-app-' + tag + '\'');
+
+            fs.writeFile(moduleFile, result, 'utf8', function (err) {
+                if (err) return console.log(err);
+            });
+        });
+
+        webpack(config, function(err, stats) {
+            if (err) {
+                return console.log(err);
+            }
+            // console.log(stats);
+            $TS.html('<bc-app-' + tag + '></bc-app-' + tag + '><script type="text/javascript" src="/files/dev/www/polyfills.js"></script><script type="text/javascript" src="/files/dev/www/vendor.js"></script><script type="text/javascript" src="/files/dev/www/app.js"></script>');
+        });
+    }
+
     static html(html: string) {
         $TS.put("text/html", html);
     }
