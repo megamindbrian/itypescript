@@ -18,19 +18,24 @@ class $TS {
         global.$$.done();
     }
 
-    static screen(url: string) {
+    static screen(url: string, options: any) {
         global.$$.async();
         const encode = require('base64-stream').encode();
         const spawn = require('child_process').spawn;
-        const wk = spawn('xvfb-run', ['-a', '-s', '-screen 0 640x480x16', 'wkhtmltoimage', '-f', 'jpeg', '-q', url, '-']);
+        const myOptions = ['-q', '-f', 'jpeg']
+            .concat.apply([], Object.keys(options || {}).map(k => ['--' + k, options[k]]));
+        const wk = spawn('xvfb-run', ['-a', '-s', '-screen 0 640x480x16', 'wkhtmltoimage',
+            ...myOptions,
+            url, '-']);
         var out = '';
         wk.stdout.pipe(encode).on('data', d => out += d.toString()).on('finish', () => $TS.png(out));
     }
 
-    static boot() {
+    static boot(files: string) {
         global.$$.async();
+        var path = require('path');
         var webpack = require('webpack');
-        var config = require('../webpack.config.js');
+        var config = require(path.join(files, 'webpack.config.js'));
         var tag = Math.random().toString(36).substring(7);
         var fs = require('fs');
         var moduleFile = '../src/app.component.ts';
@@ -51,7 +56,7 @@ class $TS {
                 return console.log(err);
             }
             // console.log(stats);
-            $TS.html('<bc-app-' + tag + '></bc-app-' + tag + '><script type="text/javascript" src="/files/dev/www/polyfills.js"></script><script type="text/javascript" src="/files/dev/www/vendor.js"></script><script type="text/javascript" src="/files/dev/www/app.js"></script>');
+            $TS.html('<iframe src="/files/dev/www/index.html"></iframe>');
         });
     }
 
