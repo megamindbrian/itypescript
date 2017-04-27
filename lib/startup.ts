@@ -22,13 +22,13 @@ class $TS {
         global.$$.async();
         const encode = require('base64-stream').encode();
         const spawn = require('child_process').spawn;
-        const myOptions = ['-q', '-f', 'jpeg']
-            .concat.apply([], Object.keys(options || {}).map(k => ['--' + k, options[k]]));
-        const wk = spawn('xvfb-run', ['-a', '-s', '-screen 0 640x480x16', 'wkhtmltoimage',
+        const myOptions = []
+            .concat.apply(['-q', '-f', 'jpeg'], Object.keys(options || {}).map(k => ['--' + k, options[k]]));
+        const wk = spawn('xvfb-run', ['-a', '-s', '"-screen 0 640x480x16"', 'wkhtmltoimage',
             ...myOptions,
             url, '-']);
         var out = '';
-        wk.stdout.pipe(encode).on('data', d => out += d.toString()).on('finish', () => $TS.png(out));
+        wk.stdout.pipe(encode).on('data', d => out += d.toString()).on('finish', () => $TS.jpg(out));
     }
 
     static boot(files: string) {
