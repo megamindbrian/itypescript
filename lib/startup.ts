@@ -24,7 +24,7 @@ class $TS {
         const spawn = require('child_process').spawn;
         const myOptions = []
             .concat.apply(['-q', '-f', 'jpeg'], Object.keys(options || {}).map(k => ['--' + k, options[k]]));
-        const wk = spawn('xvfb-run', ['-a', '-s', '"-screen 0 640x480x16"', 'wkhtmltoimage',
+        const wk = spawn('xvfb-run', ['-a', '-s', '-screen 0 640x480x16', 'wkhtmltoimage',
             ...myOptions,
             url, '-']);
         var out = '';
