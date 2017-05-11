@@ -27,7 +27,7 @@ class $TS {
         const wk = spawn('xvfb-run', ['-a', '-s', '-screen 0 640x480x16', 'wkhtmltoimage',
             ...myOptions,
             url, '-']);
-        var out = '';
+        let out = '';
         wk.stdout.pipe(encode).on('data', d => out += d.toString()).on('finish', () => $TS.jpg(out));
     }
 
@@ -40,7 +40,7 @@ class $TS {
         var fs = require('fs');
         var moduleFile = '../src/app.component.ts';
 
-        fs.readFile(moduleFile, 'utf8', function (err,data) {
+        fs.readFile(moduleFile, 'utf8', function (err, data) {
             if (err) {
                 return console.log(err);
             }
@@ -51,7 +51,7 @@ class $TS {
             });
         });
 
-        webpack(config, function(err, stats) {
+        webpack(config, function (err, stats) {
             if (err) {
                 return console.log(err);
             }
