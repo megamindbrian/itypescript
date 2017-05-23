@@ -31,6 +31,23 @@ class $TS {
         wk.stdout.pipe(encode).on('data', d => out += d.toString()).on('finish', () => $TS.jpg(out));
     }
 
+    static exec(cmd: string) {
+        global.$$.async();
+        $TS.unholdAsync();
+        var child = require("child_process").exec(cmd, function (err, stdout, stderr) {
+            console.log(err);
+            console.log(stdout);
+            console.log(stderr);
+            global.$$.done();
+        });
+        child.stdout.on('data', function (data) {
+            console.log(data.toString());
+        });
+        child.stderr.on('data', function (data) {
+            console.log(data.toString());
+        });
+    }
+
     static boot(files: string) {
         global.$$.async();
         var path = require('path');
