@@ -48,6 +48,11 @@ class $TS {
         });
     }
 
+    static execSync(cmd: string) {
+        $TS.unholdAsync();
+        require("child_process").execSync(cmd, {stdio: [0, 1, 2]});
+    }
+
     static boot(files: string) {
         global.$$.async();
         var path = require('path');
